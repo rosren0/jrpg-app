@@ -27,6 +27,7 @@ const Storage = {
 
   // Load from Supabase (preferred) or localStorage (fallback)
   async loadAsync() {
+    console.log('[Storage] loadAsync — uid:', this.uid, '| supabaseClient:', !!supabaseClient);
     if (this.uid && supabaseClient) {
       try {
         const { data, error } = await supabaseClient
@@ -34,6 +35,8 @@ const Storage = {
           .select('state')
           .eq('user_id', this.uid)
           .single();
+
+        console.log('[Storage] Supabase result — data:', data, '| error:', error);
 
         if (!error && data?.state) {
           const cloudState = typeof data.state === 'string' ? JSON.parse(data.state) : data.state;
@@ -44,6 +47,7 @@ const Storage = {
         console.warn('Supabase load error, falling back to localStorage:', e);
       }
     }
+    console.log('[Storage] falling back to localStorage');
     return this.loadLocal();
   },
 

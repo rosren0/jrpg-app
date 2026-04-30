@@ -19,6 +19,7 @@ const Auth = {
 
     // Check for existing session and listen for changes
     supabaseClient.auth.onAuthStateChange((event, session) => {
+      console.log('[Auth] onAuthStateChange — event:', event, '| user:', session?.user?.email ?? null);
       if (session?.user) {
         this.currentUser = session.user;
         this.hideLogin();
@@ -32,6 +33,7 @@ const Auth = {
 
     // Initial session check
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      console.log('[Auth] getSession — user:', session?.user?.email ?? null);
       if (!session) {
         this.showLogin();
       }
