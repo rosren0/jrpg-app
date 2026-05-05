@@ -33,10 +33,28 @@ Views.missions = function(app, ctx) {
     document.getElementById('suggest-ai-btn').onclick = () => suggestMissions();
 
     app.querySelectorAll('.mission-item').forEach(el => {
-      el.onclick = () => {
+      el.onclick = (e) => {
+        if (e.target.closest('.mission-action-btn')) return;
         const id = el.dataset.id;
         const mission = s.missions.find(m => m.id === id);
         if (mission && !mission.completed) completeMission(mission);
+      };
+    });
+
+    app.querySelectorAll('.mission-action-btn.edit').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const mission = s.missions.find(m => m.id === id);
+        if (mission) showEditMissionModal(mission);
+      };
+    });
+
+    app.querySelectorAll('.mission-action-btn.delete').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        deleteMission(id);
       };
     });
 
@@ -56,6 +74,10 @@ Views.missions = function(app, ctx) {
           </div>
         </div>
         <div class="mission-xp">+${m.xpReward} XP</div>
+        <div class="mission-actions">
+          ${!m.completed ? `<button class="mission-action-btn edit" data-id="${m.id}" title="Editar">${Icon.edit(14)}</button>` : ''}
+          <button class="mission-action-btn delete" data-id="${m.id}" title="Deletar">${Icon.trash(14)}</button>
+        </div>
       </div>
     `;
   }
@@ -178,6 +200,45 @@ Views.missions = function(app, ctx) {
       App.closeModal();
       render();
     });
+  }
+
+  function showEditMissionModal(m) {
+    const skillOpts = s.skills.map(sk => `<option value="${sk.id}" ${sk.id === m.skillId ? 'selected' : ''}>${sk.name}</option>`).join('');
+    App.showModal('Editar Missão', `
+      <div class="form-group">
+        <label class="form-label">O que você pretende fazer?</label>
+        <input type="text" class="form-input" id="edit-miss-title" value="${m.title.replace(/"/g, '&quot;')}" autofocus />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Habilidade Relacionada</label>
+        <select class="form-select" id="edit-miss-skill">${skillOpts}</select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Recompensa (XP)</label>
+        <input type="number" class="form-input" id="edit-miss-xp" value="${m.xpReward}" step="10" min="10" max="200" />
+      </div>
+    `, () => {
+      const title = document.getElementById('edit-miss-title').value.trim();
+      const skillId = document.getElementById('edit-miss-skill').value;
+      const xp = parseInt(document.getElementById('edit-miss-xp').value) || m.xpReward;
+      if (!title) return;
+
+      m.title = title;
+      m.skillId = skillId;
+      m.xpReward = xp;
+
+      App.save();
+      App.closeModal();
+      render();
+    });
+  }
+
+  function deleteMission(id) {
+    const idx = s.missions.findIndex(m => m.id === id);
+    if (idx === -1) return;
+    s.missions.splice(idx, 1);
+    App.save();
+    render();
   }
 
   function completeMission(m) {
