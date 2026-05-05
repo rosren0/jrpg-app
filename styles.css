@@ -774,6 +774,14 @@ main::-webkit-scrollbar-thumb { background: var(--bg-hover); border-radius: 3px;
 
 .mission-xp { font-weight: 700; color: var(--accent-green); font-size: 11px; }
 
+.mission-actions { display: flex; gap: 4px; align-items: center; opacity: 0; transition: opacity var(--transition); }
+.mission-item:hover .mission-actions { opacity: 1; }
+.mission-item.completed .mission-actions { opacity: 0.5; }
+.mission-action-btn { background: none; border: none; cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+.mission-action-btn:hover { background: var(--bg-hover); }
+.mission-action-btn.edit { color: var(--accent-cyan); }
+.mission-action-btn.delete { color: var(--accent-red, #ff6b6b); }
+
 .context-inline {
   margin-top: 20px; padding-top: 16px;
   border-top: 1px solid var(--border);
