@@ -41,6 +41,7 @@ const App = {
     this.startClock();
     this.navigate('overview');
     this.updateHeader();
+    Notifications.init();
   },
 
   ensureFields() {

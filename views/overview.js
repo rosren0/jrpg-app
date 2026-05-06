@@ -153,6 +153,40 @@ Views.overview = function(app, ctx) {
         <div class="card"><div class="empty-state"><div class="empty-icon">${Icon.scroll(32, 'var(--text-dim)')}</div><div class="empty-text">Nenhum log ainda</div></div></div>`}
     </div>
     <div class="context-section">
+      <div class="context-title">Exportar Dados</div>
+      <div class="card">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px">
+          <button class="btn btn-sm" id="exp-logs">📋 Logs</button>
+          <button class="btn btn-sm" id="exp-fin">💰 Finanças</button>
+          <button class="btn btn-sm" id="exp-skills">⚔️ Habilidades</button>
+          <button class="btn btn-sm btn-primary" id="exp-full">💾 Backup JSON</button>
+        </div>
+      </div>
+    </div>
+    <div class="context-section">
+      <div class="context-title">Notificações</div>
+      <div class="card">
+        <div class="stat-row">
+          <span class="stat-row-label">Lembrete diário</span>
+          <span class="stat-row-value" id="notif-status" style="color:${Notifications.isEnabled() ? 'var(--accent-green)' : 'var(--text-dim)'}">
+            ${Notifications.isEnabled() ? 'Ativo' : 'Inativo'}
+          </span>
+        </div>
+        ${Notifications.isSupported() ? `
+          <div style="display:flex; gap:6px; margin-top:10px; align-items:center">
+            <input type="time" class="form-input" id="notif-time"
+              value="${Notifications.getTime()}"
+              style="flex:1; font-size:12px; padding:7px 10px" />
+            ${Notifications.isEnabled()
+              ? `<button class="btn btn-sm btn-red" id="notif-disable">Desativar</button>`
+              : `<button class="btn btn-sm btn-primary" id="notif-enable">Ativar</button>`
+            }
+          </div>
+          <div id="notif-msg" style="font-size:10px; color:var(--text-dim); margin-top:6px"></div>
+        ` : `<div style="font-size:11px; color:var(--text-dim); margin-top:6px">Não suportado neste navegador.</div>`}
+      </div>
+    </div>
+    <div class="context-section">
       <div class="context-title">Configuração IA</div>
       <div class="card">
         <div class="stat-row">
@@ -176,6 +210,12 @@ Views.overview = function(app, ctx) {
       <div class="quote-box">"${quote}"</div>
     </div>`;
 
+  // Export handlers
+  document.getElementById('exp-logs').onclick   = () => Export.logs();
+  document.getElementById('exp-fin').onclick    = () => Export.finances();
+  document.getElementById('exp-skills').onclick = () => Export.skills();
+  document.getElementById('exp-full').onclick   = () => Export.full();
+
   // AI key handlers
   const saveBtn = document.getElementById('save-ai-key');
   if (saveBtn) saveBtn.onclick = () => {
@@ -191,4 +231,27 @@ Views.overview = function(app, ctx) {
   // Connect Supabase handler
   const connectBtn = document.getElementById('connect-supabase');
   if (connectBtn) connectBtn.onclick = () => Auth.showLogin();
+
+  // Notification handlers
+  const enableBtn = document.getElementById('notif-enable');
+  if (enableBtn) enableBtn.onclick = async () => {
+    const time = document.getElementById('notif-time')?.value;
+    const result = await Notifications.enable(time);
+    const msg = document.getElementById('notif-msg');
+    if (result.ok) {
+      App.navigate('overview');
+    } else if (msg) {
+      msg.textContent = result.reason;
+      msg.style.color = 'var(--accent-red)';
+    }
+  };
+
+  const disableBtn = document.getElementById('notif-disable');
+  if (disableBtn) disableBtn.onclick = () => {
+    Notifications.disable();
+    App.navigate('overview');
+  };
+
+  const timeInput = document.getElementById('notif-time');
+  if (timeInput) timeInput.onchange = () => Notifications.setTime(timeInput.value);
 };
