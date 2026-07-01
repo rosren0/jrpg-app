@@ -15,7 +15,8 @@ const App = {
       inventory: [],
       finances: { entries: [] },
       logs: [],
-      missions: []
+      missions: [],
+      tasks: []
     };
   },
 
@@ -52,6 +53,7 @@ const App = {
     if (!this.state.player) this.state.player = def.player;
     if (!this.state.skills) this.state.skills = def.skills;
     if (!this.state.missions) this.state.missions = [];
+    if (!this.state.tasks) this.state.tasks = [];
   },
 
   save() {
@@ -114,6 +116,7 @@ const App = {
       case 'finances':  Views.finances(app, ctx); break;
       case 'logs':      Views.logs(app, ctx); break;
       case 'missions':  Views.missions(app, ctx); break;
+      case 'tasks':     Views.tasks(app, ctx); break;
     }
 
     // On mobile/tablet, append context content inline below main
