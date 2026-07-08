@@ -97,7 +97,7 @@ const Export = {
         }
 
         // Basic structure validation
-        const required = ['player', 'skills', 'inventory', 'finances', 'logs', 'missions'];
+        const required = ['player', 'skills', 'inventory', 'finances', 'logs', 'missions', 'tasks'];
         const missing = required.filter(k => !(k in parsed));
         if (missing.length) {
           alert(`JSON inválido. Campos ausentes: ${missing.join(', ')}`);
@@ -121,14 +121,12 @@ const Export = {
             <div>⚔️ Habilidades: <strong style="color:var(--text-primary)">${skillLevels || '—'}</strong></div>
             <div>📋 Logs: <strong style="color:var(--text-primary)">${logCount}</strong></div>
             <div>🎯 Missões: <strong style="color:var(--text-primary)">${missionCount}</strong></div>
-            ${taskCount > 0 ? `<div>📌 Tarefas Kanban: <strong style="color:var(--text-primary)">${taskCount}</strong></div>` : ''}
+            <div>📌 Tarefas Kanban: <strong style="color:var(--text-primary)">${taskCount}</strong></div>
           </div>
           <div style="margin-top:14px; padding:10px; background:rgba(255,107,107,0.06); border-radius:6px; font-size:11px; color:var(--accent-red)">
             ⚠️ Isso vai <strong>substituir</strong> todos os seus dados atuais.
           </div>
         `, () => {
-          // Ensure tasks field exists (backward compat)
-          if (!parsed.tasks) parsed.tasks = [];
           App.state = parsed;
           Storage.save(App.state);
           App.ensureFields();
