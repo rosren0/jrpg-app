@@ -153,7 +153,7 @@ Views.overview = function(app, ctx) {
         <div class="card"><div class="empty-state"><div class="empty-icon">${Icon.scroll(32, 'var(--text-dim)')}</div><div class="empty-text">Nenhum log ainda</div></div></div>`}
     </div>
     <div class="context-section">
-      <div class="context-title">Exportar Dados</div>
+      <div class="context-title">Dados</div>
       <div class="card">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px">
           <button class="btn btn-sm" id="exp-logs">📋 Logs</button>
@@ -161,6 +161,7 @@ Views.overview = function(app, ctx) {
           <button class="btn btn-sm" id="exp-skills">⚔️ Habilidades</button>
           <button class="btn btn-sm btn-primary" id="exp-full">💾 Backup JSON</button>
         </div>
+        <button class="btn btn-sm" id="imp-full" style="width:100%; margin-top:6px; color:var(--accent-cyan); border-color:var(--accent-cyan)">📂 Importar Backup JSON</button>
       </div>
     </div>
     <div class="context-section">
@@ -210,11 +211,12 @@ Views.overview = function(app, ctx) {
       <div class="quote-box">"${quote}"</div>
     </div>`;
 
-  // Export handlers
+  // Export / Import handlers
   document.getElementById('exp-logs').onclick   = () => Export.logs();
   document.getElementById('exp-fin').onclick    = () => Export.finances();
   document.getElementById('exp-skills').onclick = () => Export.skills();
   document.getElementById('exp-full').onclick   = () => Export.full();
+  document.getElementById('imp-full').onclick   = () => Export.importJSON();
 
   // AI key handlers
   const saveBtn = document.getElementById('save-ai-key');
