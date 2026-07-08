@@ -25,23 +25,62 @@
 
 /* ===== LIGHT THEME ===== */
 [data-theme="light"] {
-  --bg-deep: #eef2f8;
-  --bg-panel: #ffffff;
-  --bg-card: #f5f8fd;
-  --bg-hover: #e4eaf5;
-  --border: #d4dcee;
-  --border-glow: rgba(76,194,255,0.25);
-  --text-primary: #0d1526;
-  --text-muted: #4a5878;
-  --text-dim: #8896b8;
+  /* Backgrounds — warm cream, layered depth */
+  --bg-deep:   #f0ebe3;   /* outer page, warmest cream */
+  --bg-panel:  #faf7f2;   /* sidebar, header, context panel */
+  --bg-card:   #ffffff;   /* cards, raised surfaces */
+  --bg-hover:  #ede7dc;   /* hover / active states */
+
+  /* Borders */
+  --border:      #d4ccc0;
+  --border-glow: rgba(14,120,188,0.18);
+
+  /* Text — warm dark tones, proper contrast */
+  --text-primary: #1c1712;   /* ~18:1 on bg-card */
+  --text-muted:   #5c5248;   /* ~7:1 on bg-card  */
+  --text-dim:     #8c8078;   /* ~4.5:1 on bg-card */
+
+  /* Accents darkened for light-bg contrast (WCAG AA) */
+  --accent-blue:   #1a7ab8;
+  --accent-green:  #1a9452;
+  --accent-purple: #7c3aed;
+  --accent-gold:   #b45309;
+  --accent-red:    #c8302a;
+  --accent-cyan:   #0e7ea8;
 }
+
+/* Structural shadows in light mode */
 [data-theme="light"] header,
 [data-theme="light"] aside,
 [data-theme="light"] .context {
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
 }
+
+/* Sidebar active item */
 [data-theme="light"] .menu-item.active {
-  background: rgba(76,194,255,0.1);
+  background: rgba(26,122,184,0.1);
+  border-color: rgba(26,122,184,0.25);
+  color: var(--accent-blue);
+}
+
+/* Card glow toned down */
+[data-theme="light"] .card-glow {
+  box-shadow: 0 0 12px rgba(0,0,0,0.06);
+  border-color: var(--border);
+}
+
+/* XP bars keep glow but softer */
+[data-theme="light"] .bar-fill,
+[data-theme="light"] .xp-bar-fill { box-shadow: none; }
+
+/* Avatar — keep gradient but adjust shadow */
+[data-theme="light"] .header-left .avatar {
+  box-shadow: 0 0 10px rgba(26,122,184,0.25);
+}
+
+/* Kanban columns subtle shadow */
+[data-theme="light"] .kanban-col {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1065,8 +1104,8 @@ main::-webkit-scrollbar-thumb { background: var(--bg-hover); border-radius: 3px;
   overflow: hidden;
 }
 [data-theme="light"] .theme-toggle-track {
-  background: #dbeafe;
-  border-color: #93c5fd;
+  background: #fde8c8;
+  border-color: #e8b87a;
 }
 .theme-toggle-icon {
   position: absolute;
