@@ -91,6 +91,36 @@ const App = {
         Auth.signOut();
       });
     }
+
+    // Settings dropdown toggle
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsDrop = document.getElementById('settings-dropdown');
+    if (settingsBtn && settingsDrop) {
+      settingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        settingsDrop.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!settingsDrop.contains(e.target) && e.target !== settingsBtn) {
+          settingsDrop.classList.remove('open');
+        }
+      });
+    }
+
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => Theme.toggle());
+    }
+
+    // Reset metrics
+    const resetBtn = document.getElementById('reset-metrics-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (settingsDrop) settingsDrop.classList.remove('open');
+        this.resetMetrics();
+      });
+    }
   },
 
   navigate(view) {
@@ -272,6 +302,36 @@ const App = {
 
   formatCurrency(value) {
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  },
+
+  // ---- Reset Metrics ----
+  resetMetrics() {
+    App.showModal('Resetar Métricas', `
+      <div style="text-align:center; padding:8px 0">
+        <div style="font-size:32px; margin-bottom:12px">⚠️</div>
+        <div style="font-size:14px; font-weight:600; margin-bottom:8px; color:var(--accent-red)">Tem certeza?</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.6">
+          Isso vai apagar <strong>todas</strong> as suas habilidades, logs, missões, tarefas,
+          inventário e finanças. Esta ação é <strong>irreversível</strong>.
+        </div>
+      </div>
+    `, () => {
+      const fresh = this.defaultState();
+      this.state = fresh;
+      Storage.save(this.state);
+      this.closeModal();
+      this.navigate('overview');
+      this.updateHeader();
+    });
+    // Relabel confirm button to be red/explicit
+    setTimeout(() => {
+      const btn = document.getElementById('modal-confirm');
+      if (btn) {
+        btn.textContent = 'Sim, resetar tudo';
+        btn.style.background = 'var(--accent-red)';
+        btn.style.borderColor = 'var(--accent-red)';
+      }
+    }, 10);
   }
 };
 
